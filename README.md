@@ -16,17 +16,16 @@ What are role based access controls with constraints?
 ## Libraries for non url based authorization
 
 * may(roles, action, resource, context)
-* constraint(context, resource)
 
 # Model
 
-* Resource Types: A class of resource relevant to the service being protected
+* Resource Types: Anything managed by the service being protected
 * Resources: a particular instance of a resource type
-* Action: Something users can do with resources (Read, Write, List, etc.)
-* Permissions: The general right to take an action on a type of resource
-* Roles: Classes of users
-* Context: The particular properties of a request
+* Action: Something the service being protected can do with resources (Read, Write, List, etc.)
+* Permissions: The general right to take an action on resource of a type
+* Roles: Classes of clients
+* Context: The particular properties of a request to take an action on a resource
 * Constraint: Arbitrary rule that may revoke permission depending on context
-* Dependant constraint: Constraint that depends on the particular resource
+* Dependant constraint: Constraint that depends on particular resources that the request applies to
 * Privileges: The assignment of a Permission to a role under Constraints
 
