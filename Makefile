@@ -1,13 +1,13 @@
 # Dependency managemnt lifecycle
 
-BUILD_NAME = $(shell basename $$(git rev-parse --show-toplevel)):$RANDOM
+LOCAL_BUILD_NAME = $(shell basename $$(git rev-parse --show-toplevel)):local
 
 
 .PHONY: ensure
 ensure: build
-	docker run -v $(shell pwd):$(shell docker run $(BUILD_NAME) pwd) $(BUILD_NAME) dep ensure
+	docker run -v $(shell pwd):$(shell docker run $(LOCAL_BUILD_NAME) pwd) $(LOCAL_BUILD_NAME) dep ensure
 
 
 .PHONY: build
 build:
-	docker build -t $(BUILD_NAME) .
+	docker build -t $(LOCAL_BUILD_NAME) .
