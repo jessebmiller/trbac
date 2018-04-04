@@ -25,7 +25,17 @@ What are role based access controls with constraints?
 * Permissions: The general right to take an action on resource of a type
 * Roles: Classes of clients
 * Context: The particular properties of a request to take an action on a resource
+  * For the proxy, this is the request object
 * Constraint: Arbitrary rule that may revoke permission depending on context
 * Dependant constraint: Constraint that depends on particular resources that the request applies to
 * Privileges: The assignment of a Permission to a role under Constraints
+
+## Open Questions
+
+* How do we inform trbac what roles are relevant?
+  * mapping in a configuration file? :\
+    * start with this, but make it pluggable so we can write a "Roles" interface
+      for whatever storage mechanism we want when we need it
+  * Templated URI to user service?
+    * would need templated parsing of result
 
