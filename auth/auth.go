@@ -5,8 +5,6 @@ type Auth struct {
 	Constraints ConstraintRunner
 }
 
-func (a Auth) May (c Context) bool {
+func (a Auth) May(c Context) bool {
 	return false
 }
-
-

@@ -1,9 +1,9 @@
 package auth
 
 type Permission struct {
-	Actions []string
+	Actions       []string
 	ResourceTypes []string
-	Constraints []string
+	Constraints   []string
 }
 
 type Permissionser interface {

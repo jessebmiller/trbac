@@ -3,9 +3,9 @@ package main
 import "github.com/jessebmiller/trbac/auth"
 
 type mockCtx struct {
-	action string
+	action   string
 	resource string
-	roles []string
+	roles    []string
 }
 
 func (c mockCtx) Action() string {
@@ -21,7 +21,7 @@ func (c mockCtx) Roles() []string {
 }
 
 type mockPermissions struct {
-	role string
+	role        string
 	permissions []auth.Permission
 }
 
