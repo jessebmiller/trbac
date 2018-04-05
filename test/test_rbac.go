@@ -1,82 +1,74 @@
 package main
 
-import "testing"
+import (
+	"testing"
+	"github.com/jessebmiller/trbac/auth"
+)
 
-func TestTOMLMetadataProvider(t testing.T) {
+var (
+	testPerms []auth.Permission = []auth.Permission{
+		auth.Permission{
+			[]string{"ActionA", "ActionB"},
+			[]string{"ResourceA", "ResourceB"},
+			[]string{}, // constraints ignored by constant constraint runner
+		},
+	}
+	constrainedAuth auth.Auth = auth.Auth{
+		mockPermissions{ "RoleA", testPerms },
+		constantConstraintRunner{ false },
+	}
 
-}
+	unconstrainedAuth auth.Auth = auth.Auth{
+		mockPermissions{ "RoleA", testPerms },
+		constantConstraintRunner{ true },
+	}
 
-const (
-	completeTRBAC TRBAC        = TRBAC{ ["RoleA", "RoleB"], ["ActA", "ActB"], ["resA", "resB"] }
-	emptyRolesTRBAC TRBAC      = TRBAC{ [],                 ["ActA", "ActB"], ["resA", "resB"] }
-	emptyActionsTRBAC TRBAC    = TRBAC{ ["RoleA", "RoleB"], [],               ["resA", "resB"] }
-	emptyResourcesTRBAC TRBAC  = TRBAC{ ["RoleA", "RoleB"], ["ActA", "ActB"], []               }
-
-	relevantUnconstrained Context = TestCtx{ ["RoleA", "XXXXX"], "ActB", "resA", unconstrainedPrivileges }
-	relevantConstrained Context   = TestCtx{ ["RoleA", "XXXXX"], "ActB", "resA", constrainedPrivileges   }
-	irrelevantRoles Context       = TestCtx{ ["XXXXX", "YYYYY"], "ActB", "resA", unconstrainedPrivileges }
-	irrelevantActions Context     = TestCtx{ ["RoleA", "RoleX"], "XXXX", "resA", unconstrainedPrivileges }
-	irrelevantResources Context   = TestCtx{ ["RoleA", "RoleX"], "ActB", "XXXX", unconstrainedPrivileges }
-	zeroRoles Context             = TestCtx{ [],                 "ActB", "resA", unconstrainedPrivileges }
-	zeroActions Context           = TestCtx{ ["RoleA", "RoleX"], nil,    "resA", unconstrainedPrivileges }
-	zeroResources Context         = TestCtx{ ["RoleA", "RoleX"], "ActB", nil,    unconstrainedPrivileges }
-	zeroPrivileges Context        = TestCtx{ ["RoleA", "RoleX"], "ActB", "resA", zeroPrivileges          }
+	relevantRoles []string            = []string{ "RoleA", "RoleX" }
+	irrelevantRoles []string          = []string{ "RoleX", "RoleY" }
+	emptyRoles []string = []string{}
+	relevantCtx auth.Context = mockCtx{ "ActionB", "ResourceA", relevantRoles }
+	irrelevantRolesCtx auth.Context       = mockCtx{ "ActionB", "ResourceA", irrelevantRoles }
+	irrelevantActionsCtx auth.Context     = mockCtx{ "ActionX", "ResourceA", relevantRoles   }
+	irrelevantResourcesCtx auth.Context   = mockCtx{ "ActionB", "ResourceX", relevantRoles   }
+	emptyRolesCtx auth.Context             = mockCtx{ "ActionB", "ResourceA", emptyRoles      }
 )
 
 func TestMay(t testing.T) {
-	const mayCases = []struct{
-		trbac   TRBAC
-		context Context
-		allowed Bool
-		err     Error
+	var mayCases = []struct{
+		auth   auth.Auth
+		context auth.Context
+		allowed bool
 	}{
-		{ completeTRBAC, relevantUnconstrained, true,  nil},
-		{ completeTRBAC, relevantConstrained,   false, nil },
+		// unconstrained auth with a relevant context should be allowed
+		{ unconstrainedAuth, relevantCtx, true },
 
-		// privileges are irrelevant if any of roles, actions or
-		// resources are irrelevant
-		{ completeTRBAC, irrelevantRoles,      false, nil },
-		{ completeTRBAC, irrelevantActions,    false, nil },
-		{ completeTRBAC, irrelevantResources,  false, nil },
+		// but not if constrained
+		{ constrainedAuth, relevantCtx, false },
 
-		// should fail without roles, actions, resources, and privileges
-		// whether or not the TRBAC doesn lists them.
-		// zero contexts are false
-		{ completeTRBAC, zeroRoles,      false, nil },
-		{ completeTRBAC, zeroActions,    false, nil },
-		{ completeTRBAC, zeroResources,  false, nil },
-		{ completeTRBAC, zeroPrivileges, false, nil },
+		// any auth with irrelevant context should not be allowed
+		{ unconstrainedAuth, irrelevantRolesCtx, false },
+		{ unconstrainedAuth, irrelevantActionsCtx, false },
+		{ unconstrainedAuth, irrelevantResourcesCtx, false },
+		{ constrainedAuth, irrelevantRolesCtx, false },
+		{ constrainedAuth, irrelevantActionsCtx, false },
+		{ constrainedAuth, irrelevantResourcesCtx, false },
 
-		// empty TRBACs are errors
-		{ emptyRolesTRBAC,      relevantUnconstrained, false, emptyRolesError      },
-		{ emptyActionsTRBAC,    relevantUnconstrained, false, emptyActionsError    },
-		{ emptyResourcesTRBAC,  relevantUnconstrained, false, emptyResourcesError  }
+		// nor should any auth with empty roles, also this should error
+		{ unconstrainedAuth, emptyRolesCtx, false },
+		{ constrainedAuth, emptyRolesCtx, false },
 
-		// empty TRBACs and zero contexts are still errors and false
-		{ emptyRolesTRBAC,      zeroRoles,      false, emptyRolesError      },
-		{ emptyActionsTRBAC,    zeroActions,    false, emptyActionsError    },
-		{ emptyResourcesTRBAC,  zeroResources,  false, emptyResourcesError  },
-		{ emptyPrivilegesTRBAC,	zeroPrivileges,	false, emptyPrivilegesError },
 	}
 
 	for _, mc := range mayCases {
-		allowed, err := trbac.may(mc.context)
+		allowed := mc.auth.May(mc.context)
 		if allowed != mc.allowed {
 			t.Errorf("may(%q) => %q, _. want %q, _",
-				mc.ctx,
+				mc.context,
 				allowed,
 				mc.allowed,
 			)
 		}
-		if err != mc.err {
-			t.Errorf("may(%q) => _, %q. want _, %q",
-				mc.ctx,
-				err,
-				mc.err,
-			)
-		}
 	}
-
 }
 
 func TestRequestContextProvider(t testing.T) {
@@ -95,10 +87,14 @@ func TestConstantResourceTypeProvider(t testing.T) {
 
 }
 
-func TestRequestPrivilegesProvider(t testing.T) {
+func TestRequestPermissionsProvider(t testing.T) {
 
 }
 
 func TestShellScriptConstraintRunner(t testing.T) {
+
+}
+
+func TestTOMLMetadataProvider(t testing.T) {
 
 }
