@@ -2,7 +2,7 @@
 
 LOCAL_BUILD_NAME = $(shell basename $$(git rev-parse --show-toplevel)):local
 
-.PHONE: fmt
+.PHONY: fmt
 fmt: build
 	docker run -v $(shell pwd):$(shell docker run $(LOCAL_BUILD_NAME) pwd) $(LOCAL_BUILD_NAME) go fmt ./...
 
