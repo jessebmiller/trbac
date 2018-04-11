@@ -2,6 +2,8 @@ package main
 
 import "github.com/jessebmiller/trbac/auth"
 
+func main() {}
+
 type mockCtx struct {
 	action   string
 	resource string
