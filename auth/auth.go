@@ -2,32 +2,55 @@ package auth
 
 type Auth struct {
 	Permissionser Permissionser
-	Constraints ConstraintRunner
+	ConstraintRunner ConstraintRunner
+}
+
+func isIn(a string, xs []string) bool {
+	// check them all, return true as soon as it's found
+	for _, x := range xs {
+		if (a == x) {
+			return true
+		}
+	}
+	// if not found it's not in there
+	return false
 }
 
 func relevantPermission(p Permission, c Context) bool {
-	// if c.Action() is in p.Actions()
-	// same for resource type
+	// if the context's action is in the permission
+	// and the context's resource type is in the permission
 	// the permission is relevant
-	return true
+	if (isIn(c.Action(), p.Actions) && isIn(c.ResourceType(), p.ResourceTypes)) {
+		return true
+	}
 	// otherwise it's not
 	return false
 }
 
-// May is true iff we can find any relevant permission whose constraints pass
-func (a Auth) May(c Context) bool {
-	// find permissions with context relevant actions and resource types
-	permissions := a.Permissionser.Permissions(c.Roles())
-	ps := make([]Permission, 0)
-	for _, p := range permissions {
-		if relevantPermission(p, c) {
-			ps := append(ps, p)
+func allConstraintsPass(constraints []string, cr ConstraintRunner, cxt Context) bool {
+	// if any constraint fails, return false early
+	// if we get through the whole list without failing, return true
+	for _, constraint := range constraints {
+		if (!cr.Run(cxt, constraint)) {
+			return false
 		}
 	}
-	// look for a permission whose constarinsts all pass
-	// if we find it, May is true
 	return true
-	// if we don't find a permission whose constraints all pass
+}
+
+// May is true iff we can find any relevant permission whose constraints pass
+func (a Auth) May(c Context) bool {
+	// find a permission that grants in this context
+	permissions := a.Permissionser.Permissions(c.Roles())
+	for _, p := range permissions {
+		if !relevantPermission(p, c) {
+			continue
+		}
+		if allConstraintsPass(p.Constraints, a.ConstraintRunner, c) {
+			return true
+		}
+	}
+	// if we don't find a permission that grants in this context
 	// May is false
 	return false
 }

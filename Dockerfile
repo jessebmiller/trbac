@@ -1,7 +1,7 @@
 FROM golang:alpine
 
 # Install go dep
-RUN apk add --no-cache curl
+RUN apk add --no-cache curl git
 RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 RUN apk del curl
 

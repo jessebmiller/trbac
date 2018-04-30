@@ -2,6 +2,6 @@ package auth
 
 type Context interface {
 	Action() string
-	Resource() string
+	ResourceType() string
 	Roles() []string
 }
