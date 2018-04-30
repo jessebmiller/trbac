@@ -1,5 +1,5 @@
 # trbac
-What are role based access controls with constraints?
+What is role-based access control with constraints?
 
 # Goal
 
