@@ -95,7 +95,7 @@ func TestFuncMapConstraintRunner(t *testing.T) {
 		},
 	)
 	table := []struct{
-		cxt auth.Context
+		ctx auth.Context
 		runner auth.ConstraintRunner
 		constraint string
 		result bool
@@ -125,7 +125,7 @@ func TestFuncMapConstraintRunner(t *testing.T) {
 	for _, row := range table {
 		assert.Equal(
 			t,
-			row.runner.Run(row.constraint, row.cxt),
+			row.runner.Run(row.constraint, row.ctx),
 			row.result,
 			fmt.Sprintf("%v", row),
 		)
