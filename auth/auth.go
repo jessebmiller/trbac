@@ -27,11 +27,11 @@ func relevantPermission(p Permission, c Context) bool {
 	return false
 }
 
-func allConstraintsPass(constraints []string, cr ConstraintRunner, cxt Context) bool {
+func allConstraintsPass(constraints []string, cr ConstraintRunner, ctx Context) bool {
 	// if any constraint fails, return false early
 	// if we get through the whole list without failing, return true
 	for _, constraint := range constraints {
-		if (!cr.Run(cxt, constraint)) {
+		if (!cr.Run(constraint, ctx)) {
 			return false
 		}
 	}

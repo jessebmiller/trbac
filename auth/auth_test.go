@@ -1,6 +1,7 @@
 package auth_test
 
 import (
+	"fmt"
 	"testing"
 	"github.com/jessebmiller/trbac/auth"
 	"github.com/stretchr/testify/assert"
@@ -42,7 +43,7 @@ type constantConstraintRunner struct {
 	result bool
 }
 
-func (c constantConstraintRunner) Run(_ auth.Context, _ string) bool {
+func (c constantConstraintRunner) Run(_ string, _ auth.Context) bool {
 	return c.result
 }
 
@@ -80,4 +81,57 @@ func TestAuthMay(t *testing.T) {
 		result := row.a.May(row.c)
 		assert.Equal(t, result, row.may)
 	}
+}
+
+func TestFuncMapConstraintRunner(t *testing.T) {
+	funcMapCR := auth.NewFuncMapConstraintRunner(
+		map[string]func(auth.Context) bool{
+			"ifActionResourceMatch": func (c auth.Context) bool {
+				return c.Action() == c.ResourceType()
+			},
+			"ifActionResourceMissmatch": func (c auth.Context) bool {
+				return c.Action() != c.ResourceType()
+			},
+		},
+	)
+	table := []struct{
+		cxt auth.Context
+		runner auth.ConstraintRunner
+		constraint string
+		result bool
+	}{
+		{ auth.NewLiteralContext(
+			"match",
+			"match",
+			[]string{"role"},
+		), funcMapCR, "ifActionResourceMatch", true },
+		{ auth.NewLiteralContext(
+			"match",
+			"match",
+			[]string{"role"},
+		), funcMapCR, "ifActionResourceMissmatch", false },
+		{ auth.NewLiteralContext(
+			"match",
+			"mismatch",
+			[]string{"role"},
+		), funcMapCR, "ifActionResourceMatch", false },
+		{ auth.NewLiteralContext(
+			"match",
+			"mismatch",
+			[]string{"role"},
+		), funcMapCR, "ifActionResourceMissmatch", true },
+	}
+
+	for _, row := range table {
+		assert.Equal(
+			t,
+			row.runner.Run(row.constraint, row.cxt),
+			row.result,
+			fmt.Sprintf("%v", row),
+		)
+	}
+}
+
+func TestMapPrivileges(t *testing.T) {
+
 }
