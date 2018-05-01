@@ -5,10 +5,10 @@ type Auth struct {
 	ConstraintRunner ConstraintRunner
 }
 
-func isIn(a string, xs []string) bool {
+func isIn(str string, collection []string) bool {
 	// check them all, return true as soon as it's found
-	for _, x := range xs {
-		if (a == x) {
+	for _, member := range collection {
+		if (str == member) {
 			return true
 		}
 	}
