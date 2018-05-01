@@ -39,14 +39,14 @@ func allConstraintsPass(constraints []string, cr ConstraintRunner, ctx Context) 
 }
 
 // May is true iff we can find any relevant permission whose constraints pass
-func (a Auth) May(c Context) bool {
+func (auth Auth) May(ctx Context) bool {
 	// find a permission that grants in this context
-	permissions := a.Permissionser.Permissions(c.Roles())
-	for _, p := range permissions {
-		if !relevantPermission(p, c) {
+	permissions := auth.Permissionser.Permissions(ctx.Roles())
+	for _, perm := range permissions {
+		if !relevantPermission(perm, ctx) {
 			continue
 		}
-		if allConstraintsPass(p.Constraints, a.ConstraintRunner, c) {
+		if allConstraintsPass(perm.Constraints, auth.ConstraintRunner, ctx) {
 			return true
 		}
 	}
