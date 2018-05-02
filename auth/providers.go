@@ -23,12 +23,12 @@ type funcMapConstraintRunner struct {
 	constraintFuncs map[string]func(Context) bool
 }
 
-func (fmcr funcMapConstraintRunner) Run (constraint string, ctx Context) bool {
-	return fmcr.constraintFuncs[constraint](ctx)
+func (runner funcMapConstraintRunner) Run (constraint string, ctx Context) bool {
+	return runner.constraintFuncs[constraint](ctx)
 }
 
-func NewFuncMapConstraintRunner(fm map[string]func(Context) bool) funcMapConstraintRunner {
-	return funcMapConstraintRunner{fm}
+func NewFuncMapConstraintRunner(funcMap map[string]func(Context) bool) funcMapConstraintRunner {
+	return funcMapConstraintRunner{funcMap}
 }
 
 type mapPrivileges struct {
@@ -37,11 +37,11 @@ type mapPrivileges struct {
 
 }
 
-func (lp mapPrivileges) Permissions(roles []string) []Permission {
+func (privs mapPrivileges) Permissions(roles []string) []Permission {
 	// gather the permissions granted to each given role
 	perms := []Permission{}
-	for _, r := range roles {
-		perms = append(perms, lp.permissions[r]...)
+	for _, role := range roles {
+		perms = append(perms, privs.permissions[role]...)
 	}
 	return perms
 }
