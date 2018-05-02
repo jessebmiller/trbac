@@ -23,6 +23,7 @@ type Permission struct {
 }
 
 // Privileges map roles to their permissions (who can do what)
+// This should be the union of permissions granted to each role
 type Privileges interface {
 	// TODO this might error, handle that
 	GetPermissions([]string) []Permission // Roles to Permissions
@@ -37,35 +38,34 @@ type ConstraintRunner interface {
  * builtin implementations
  */
 
+// constraintFunc is a Go function implementing a constraint
+type constraintFunc = func(Context) bool
+
 // funcMapConstraintRunner uses a literal map from constraint name to a Go function constraint
 type funcMapConstraintRunner struct {
-	constraintFuncs map[string]func(Context) bool
+	constraintFuncs map[string]constraintFunc
 }
 
-func (fmcr funcMapConstraintRunner) Run (constraint string, ctx Context) bool {
-	return fmcr.constraintFuncs[constraint](ctx)
+func (runner funcMapConstraintRunner) Run (constraint string, ctx Context) bool {
+	return runner.constraintFuncs[constraint](ctx)
 }
 
-func NewFuncMapConstraintRunner(fm map[string]func(Context) bool) funcMapConstraintRunner {
+func NewFuncMapConstraintRunner(fm map[string]constraintFunc) funcMapConstraintRunner {
 	return funcMapConstraintRunner{fm}
 }
 
 // mapPrivileges uses an in memory Go map to look up Permissions from roles
 type mapPrivileges struct {
-	// role: permissions granted to that role
+	// role to permissions granted to that role
 	permissions map[string][]Permission
 
 }
 
-<<<<<<< Updated upstream
-func (lp mapPrivileges) Permissions(roles []string) []Permission {
-=======
 func (privs mapPrivileges) GetPermissions(roles []string) []Permission {
->>>>>>> Stashed changes
 	// gather the permissions granted to each given role
 	perms := []Permission{}
 	for _, r := range roles {
-		perms = append(perms, lp.permissions[r]...)
+		perms = append(perms, privs.permissions[r]...)
 	}
 	return perms
 }

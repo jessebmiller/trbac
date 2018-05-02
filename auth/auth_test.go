@@ -25,12 +25,12 @@ func (c mockContext) Roles() []string {
 	return c.roles
 }
 
-type mockPermissionser struct {
+type mockPrivileges struct {
 	role        string
 	permissions []auth.Permission
 }
 
-func (p mockPermissionser) Permissions(roles []string) []auth.Permission {
+func (p mockPrivileges) GetPermissions(roles []string) []auth.Permission {
 	for _, r := range roles {
 		if r == p.role {
 			return p.permissions
@@ -58,11 +58,11 @@ func TestAuthMay(t *testing.T) {
 			[]string{"RX", "RY"},
 			[]string{} },
 	}
-	testPermissionser := mockPermissionser{ "tester", testPermissions }
+	testPrivileges := mockPrivileges{ "tester", testPermissions }
 	unconstrainedRunner := constantConstraintRunner{ true }
 	constrainedRunner := constantConstraintRunner{ false }
-	unconstrainedAuth := auth.Auth{ testPermissionser, unconstrainedRunner }
-	constrainedAuth := auth.Auth{ testPermissionser, constrainedRunner }
+	unconstrainedAuth := auth.Auth{ testPrivileges, unconstrainedRunner }
+	constrainedAuth := auth.Auth{ testPrivileges, constrainedRunner }
 	authorizedContext := mockContext{ "A0", "R1", []string{"tester"} }
 	unauthorizedContext := mockContext{ "AX", "R0", []string{"tester"} }
 	wrongRoleContext := mockContext{ "A0", "R1", []string{"not-tester"} }
