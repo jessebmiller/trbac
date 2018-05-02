@@ -1,14 +1,14 @@
 package auth
 
 type Auth struct {
-	Privileges Privileges
+	Privileges       Privileges
 	ConstraintRunner ConstraintRunner
 }
 
 func isIn(str string, collection []string) bool {
 	// check them all, return true as soon as it's found
 	for _, member := range collection {
-		if (str == member) {
+		if str == member {
 			return true
 		}
 	}
@@ -20,7 +20,7 @@ func relevantPermission(p Permission, c Context) bool {
 	// if the context's action is in the permission
 	// and the context's resource type is in the permission
 	// the permission is relevant
-	if (isIn(c.Action(), p.Actions) && isIn(c.ResourceType(), p.ResourceTypes)) {
+	if isIn(c.Action(), p.Actions) && isIn(c.ResourceType(), p.ResourceTypes) {
 		return true
 	}
 	// otherwise it's not
@@ -31,7 +31,7 @@ func allConstraintsPass(constraints []string, cr ConstraintRunner, ctx Context) 
 	// if any constraint fails, return false early
 	// if we get through the whole list without failing, return true
 	for _, constraint := range constraints {
-		if (!cr.Run(constraint, ctx)) {
+		if !cr.Run(constraint, ctx) {
 			return false
 		}
 	}

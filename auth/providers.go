@@ -17,9 +17,9 @@ shell script or docker constraint runner.
 // Any of these actions, on any of these resource types are allowed unless any
 // of these constraints fail (return false)
 type Permission struct {
-	Actions       []string  // These actions
-	ResourceTypes []string  // are allowed on these resource types
-	Constraints   []string  // as long as these contstraints hold
+	Actions       []string // These actions
+	ResourceTypes []string // are allowed on these resource types
+	Constraints   []string // as long as these contstraints hold
 }
 
 // Privileges map roles to their permissions (who can do what)
@@ -46,7 +46,7 @@ type funcMapConstraintRunner struct {
 	constraintFuncs map[string]constraintFunc
 }
 
-func (runner funcMapConstraintRunner) Run (constraint string, ctx Context) bool {
+func (runner funcMapConstraintRunner) Run(constraint string, ctx Context) bool {
 	return runner.constraintFuncs[constraint](ctx)
 }
 
@@ -58,7 +58,6 @@ func NewFuncMapConstraintRunner(fm map[string]constraintFunc) funcMapConstraintR
 type mapPrivileges struct {
 	// role to permissions granted to that role
 	permissions map[string][]Permission
-
 }
 
 func (privs mapPrivileges) GetPermissions(roles []string) []Permission {

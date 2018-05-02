@@ -7,9 +7,9 @@ type Context interface {
 }
 
 type literalContext struct {
-	action string
+	action       string
 	resourceType string
-	roles []string
+	roles        []string
 }
 
 func (lc literalContext) Action() string {
