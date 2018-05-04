@@ -1,7 +1,7 @@
 package auth
 
 type Auth struct {
-	Permissionser Permissionser
+	Privileges       Privileges
 	ConstraintRunner ConstraintRunner
 }
 
@@ -41,7 +41,7 @@ func allConstraintsPass(constraints []string, runner ConstraintRunner, ctx Conte
 // May is true iff we can find any relevant permission whose constraints pass
 func (auth Auth) May(ctx Context) bool {
 	// find a permission that grants in this context
-	permissions := auth.Permissionser.Permissions(ctx.Roles())
+	permissions := auth.Privileges.GetPermissions(ctx.Roles())
 	for _, perm := range permissions {
 		if !relevantPermission(perm, ctx) {
 			continue
