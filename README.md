@@ -19,6 +19,8 @@ What is role-based access control with constraints?
 
 # Model
 
+drawing: https://docs.google.com/drawings/d/1MFizaLM7BWfPZSmduzvzDIYvQer8vfR2nGHbrjzVtbM/edit?usp=sharing
+
 * Resource Types: Anything managed by the service being protected
 * Resources: a particular instance of a resource type
 * Action: Something the service being protected can do with resources (Read, Write, List, etc.)
