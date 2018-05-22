@@ -1,6 +1,9 @@
 package auth
 
+import "fmt"
+
 type Context interface {
+	fmt.Stringer
 	Action() string
 	ResourceType() string
 	Roles() []string
@@ -22,6 +25,10 @@ func (lc literalContext) ResourceType() string {
 
 func (lc literalContext) Roles() []string {
 	return lc.roles
+}
+
+func (lc literalContext) String() string {
+	return fmt.Sprintf("%v %v %v", lc.Action(), lc.ResourceType(), lc.Roles())
 }
 
 func NewLiteralContext(action string, resourceType string, roles []string) Context {

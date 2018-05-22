@@ -25,6 +25,10 @@ func (c mockContext) Roles() []string {
 	return c.roles
 }
 
+func (c mockContext) String() string {
+	return fmt.Sprintf("%v %v %v", c.Action(), c.ResourceType(), c.Roles())
+}
+
 type mockPrivileges struct {
 	role        string
 	permissions []auth.Permission
