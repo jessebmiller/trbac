@@ -2,7 +2,7 @@ package auth
 
 /*
 
-Providers are inteded to be metadat driven.
+Providers are inteded to be metadata driven.
 
 Currently there are simply builtin internal implementations of the interfaces
 required.
@@ -12,6 +12,12 @@ a yaml Privileges (mapping from roles to permissions, who can do what) and a
 shell script or docker constraint runner.
 
 */
+
+import (
+	"path"
+	"os/exec"
+	"github.com/BurntSushi/toml"
+)
 
 // Permission is the right to take an action
 // Any of these actions, on any of these resource types are allowed unless any
@@ -54,6 +60,21 @@ func NewFuncMapConstraintRunner(fm map[string]constraintFunc) funcMapConstraintR
 	return funcMapConstraintRunner{fm}
 }
 
+type ShellScriptConstraintRunner struct {
+	scriptRoot string
+}
+
+func (runner ShellScriptConstraintRunner) Run(constraint string, ctx Context) bool {
+	shellCommand := path.Join(runner.scriptRoot, constraint)
+	cmd := exec.Command(shellCommand, ctx.String())
+	err := cmd.Run()
+	return err == nil
+}
+
+func NewShellScriptConstraintRunner(scriptRoot string) ShellScriptConstraintRunner {
+	return ShellScriptConstraintRunner{scriptRoot}
+}
+
 // mapPrivileges uses an in memory Go map to look up Permissions from roles
 type mapPrivileges struct {
 	// role to permissions granted to that role
@@ -71,4 +92,13 @@ func (privs mapPrivileges) GetPermissions(roles []string) []Permission {
 
 func NewMapPrivileges(permsMap map[string][]Permission) mapPrivileges {
 	return mapPrivileges{permsMap}
+}
+
+// NewTomlPrivileges reads privileges from a toml file
+func NewTomlPrivileges(tomlPath string) (Privileges, error) {
+	var privs map[string][]Permission
+	if _, err := toml.DecodeFile(tomlPath, &privs); err != nil {
+		return nil, err
+	}
+	return NewMapPrivileges(privs), nil
 }

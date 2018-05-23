@@ -5,10 +5,10 @@ type Auth struct {
 	ConstraintRunner ConstraintRunner
 }
 
-func isIn(str string, collection []string) bool {
+func isIn(example string, collection []string) bool {
 	// check them all, return true as soon as it's found
 	for _, member := range collection {
-		if str == member {
+		if (example == member) {
 			return true
 		}
 	}
@@ -16,22 +16,22 @@ func isIn(str string, collection []string) bool {
 	return false
 }
 
-func relevantPermission(p Permission, c Context) bool {
+func relevantPermission(perm Permission, ctx Context) bool {
 	// if the context's action is in the permission
 	// and the context's resource type is in the permission
 	// the permission is relevant
-	if isIn(c.Action(), p.Actions) && isIn(c.ResourceType(), p.ResourceTypes) {
+	if (isIn(ctx.Action(), perm.Actions) && isIn(ctx.ResourceType(), perm.ResourceTypes)) {
 		return true
 	}
 	// otherwise it's not
 	return false
 }
 
-func allConstraintsPass(constraints []string, cr ConstraintRunner, ctx Context) bool {
+func allConstraintsPass(constraints []string, runner ConstraintRunner, ctx Context) bool {
 	// if any constraint fails, return false early
 	// if we get through the whole list without failing, return true
 	for _, constraint := range constraints {
-		if !cr.Run(constraint, ctx) {
+		if (!runner.Run(constraint, ctx)) {
 			return false
 		}
 	}
