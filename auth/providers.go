@@ -18,6 +18,7 @@ import (
 	"github.com/BurntSushi/toml"
 	"os/exec"
 	"path"
+	"strings"
 )
 
 // Permission is the right to take an action
@@ -67,7 +68,7 @@ type ShellScriptConstraintRunner struct {
 
 func (runner ShellScriptConstraintRunner) Run(constraint string, ctx Context) bool {
 	shellCommand := path.Join(runner.scriptRoot, constraint)
-	cmd := exec.Command(shellCommand, ctx.String())
+	cmd := exec.Command(shellCommand, strings.Split(ctx.String(), " ")...)
 	err := cmd.Run()
 	fmt.Println(constraint, err)
 	return err == nil

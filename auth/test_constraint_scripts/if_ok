@@ -1,8 +1,7 @@
 #!/bin/sh
 
-if ["$1" = "a x [ro]"]
+if [ "$2" == "x" ]
 then
     exit 1
 fi
-echo "$@"
 exit 0

@@ -18,21 +18,49 @@ func TestConstraintRunners(t *testing.T) {
 		{
 			scriptRunner,
 			"always",
+			/*
+			#!/bin/sh
+
+			exit 0
+                        */
 			mockContext{},
 			true,
 		}, {
 			scriptRunner,
 			"never",
+			/*
+			#!/bin/sh
+
+			exit 1
+                        */
 			mockContext{},
 			false,
 		}, {
 			scriptRunner,
 			"if_ok",
+			/*
+                        #!/bin/sh
+
+                        if [ "$2" == "x" ]
+                        then
+                            exit 1
+                        fi
+                        exit 0
+                        */
 			mockContext{"a", "r", []string{"ro"}},
 			true,
 		}, {
 			scriptRunner,
 			"if_ok",
+			/*
+                        #!/bin/sh
+
+                        if [ "$2" == "x" ]
+                        then
+                            exit 1
+                        fi
+                        exit 0
+                        */
 			mockContext{"a", "x", []string{"ro"}},
 			false,
 		},
