@@ -30,7 +30,7 @@ drawing: https://docs.google.com/drawings/d/1MFizaLM7BWfPZSmduzvzDIYvQer8vfR2nGH
 * Roles: Classes of actors on protected resources
 * Context: The particular properties of a request to take an action on a
   resource
-  * For the proxy, this is the request object
+  * For a proxy, this could be the `*http.Request` object
 * Constraint: Arbitrary rule that may deny permission depending on context
 * [Future work] Dependant constraint: Constraint that depends on particular
   resources that the request applies to
