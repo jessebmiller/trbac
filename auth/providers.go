@@ -14,9 +14,10 @@ shell script or docker constraint runner.
 */
 
 import (
-	"path"
-	"os/exec"
+	"fmt"
 	"github.com/BurntSushi/toml"
+	"os/exec"
+	"path"
 )
 
 // Permission is the right to take an action
@@ -68,6 +69,7 @@ func (runner ShellScriptConstraintRunner) Run(constraint string, ctx Context) bo
 	shellCommand := path.Join(runner.scriptRoot, constraint)
 	cmd := exec.Command(shellCommand, ctx.String())
 	err := cmd.Run()
+	fmt.Println(constraint, err)
 	return err == nil
 }
 
