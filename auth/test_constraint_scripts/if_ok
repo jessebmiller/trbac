@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if ["$1" = "a x [ro]"]
+then
+    exit 1
+fi
+echo "$@"
+exit 0
