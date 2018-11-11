@@ -19,7 +19,7 @@ What is typed role-based access control with constraints?
 
 # Model
 
-drawing: https://docs.google.com/drawings/d/1MFizaLM7BWfPZSmduzvzDIYvQer8vfR2nGHbrjzVtbM/edit?usp=sharing
+drawing: https://docs.google.com/drawings/d/19gKj3q9ITIahSrRXr3Ul76ntMTrowK3g0XbVQ4jOquo/edit?usp=sharing
 
 * Resource Types: Anything managed by the service being protected
 * Resources: a particular instance of a resource type
