@@ -8,17 +8,13 @@ import (
 
 func TestTOMLPrivileges(t *testing.T) {
 	tomlData := `
-reader = [{
-  actions = ["read"],
-  resource_types = ["document"],
-  constraints = []
-}]
+reader = [
+  { actions = ["read"], resource_types = ["document"], constraints = [] }
+]
 
-writer = [{
-  actions = ["read", "write"],
-  resource_types = ["document"],
-  constraints = ["business_hours"]
-}]
+writer = [
+  { actions = ["read", "write"], resource_types = ["document"], constraints = ["business_hours"] }
+]
 `
 
     tmpFile, err := ioutil.TempFile("", "privileges*.toml")

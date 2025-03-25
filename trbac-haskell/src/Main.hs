@@ -1,0 +1,47 @@
+module Main where
+
+import qualified Data.Map as Map
+import qualified Data.Set as Set
+import Data.Text (Text, pack)
+import TRBAC.Types
+import TRBAC.Config
+import TRBAC.Context
+import TRBAC.ConstraintRunner
+import TRBAC.Authorization
+
+main :: IO ()
+main = do
+  -- Load privileges from YAML
+  ePrivileges <- loadPrivileges "privileges.yaml"
+  case ePrivileges of
+    Left err -> putStrLn $ "Error loading privileges: " ++ show err
+    Right privileges -> do
+      -- Create a constraint runner
+      let businessHoursConstraint = Constraint "business_hours_only"
+      let auditLogConstraint = Constraint "audit_logged"
+      
+      let constraintMap = Map.fromList
+            [ (businessHoursConstraint, const True) -- Always pass for this example
+            , (auditLogConstraint, \ctx -> do
+                -- Log the access attempt
+                putStrLn $ "AUDIT: " ++ show (getAction ctx) ++ " " ++
+                  show (getResourceType ctx) ++ " by " ++ show (getRoles ctx)
+                return True
+              )
+            ]
+      
+      let runner = FunctionMapConstraintRunner constraintMap
+      
+      -- Create a context
+      let ctx = BasicContext
+            { basicAction = Action "read"
+            , basicResourceType = ResourceType "document"
+            , basicRoles = [Role "reader"]
+            }
+      
+      -- Check authorization
+      let authorized = may privileges runner ctx
+      
+      if authorized
+        then putStrLn "Access granted"
+        else putStrLn "Access denied"

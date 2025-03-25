@@ -23,3 +23,28 @@ impl ConstraintRunner for FuncMapConstraintRunner {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::context::Context;
+
+    #[test]
+    fn test_constraint_runner_with_existing_constraint() {
+        let mut funcs: HashMap<String, Box<dyn Fn(&Context) -> bool>> = HashMap::new();
+        funcs.insert("test_constraint".to_string(), Box::new(|_ctx| true));
+        let runner = FuncMapConstraintRunner::new(funcs);
+
+        let context = Context::new("action", "resource", vec!["role"]);
+        assert!(runner.run("test_constraint", &context));
+    }
+
+    #[test]
+    fn test_constraint_runner_with_non_existing_constraint() {
+        let funcs: HashMap<String, Box<dyn Fn(&Context) -> bool>> = HashMap::new();
+        let runner = FuncMapConstraintRunner::new(funcs);
+
+        let context = Context::new("action", "resource", vec!["role"]);
+        assert!(!runner.run("non_existing_constraint", &context));
+    }
+}
