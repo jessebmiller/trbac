@@ -1,39 +1,64 @@
-# trbac
-What is typed role-based access control with constraints?
+# TRBAC
 
-# Goal
+What is Typed Role Based Access Control with constraints?
 
-* Simple authorization mechanism for microservices
-* Declarative RBAC definitions as configuration
-* Language agnostic contstraints through shell scripts
+# Design goals
 
-## Libraries for declarative Typed RBAC
+- **Simplicity**: Authorization logic should be clear and understandable
+- **Type Safety**: Resource types should be explicitly defined and checked
+- **Extensibility**: The system should be easily extended via constraints
+- **Language Agnosticism**: Core concepts should be implementable in any language
+- **Minimal Dependencies**: Core functionality should have minimal external dependencies
+- **Declarative Configuration**: Authorization rules should be defined declaratively
 
-* Users of the library provide a Context implementation that provides an
-  `Action` on a `ResourceType` and the `Roles` of the requesting agent as well
-  as any metadata your constraints need.
+## Target Use Cases
 
-* Users of the library also provide a `Privileges` definition in TOML.
+### Edge Computing & IoT Environments
 
-* auth.May(c Context) bool
+Edge devices often have limited resources and intermittent connectivity. TRBAC's lightweight nature and minimal dependencies make it ideal for:
 
-# Model
+- Embedded systems with constrained environments
+- Devices that need to make authorization decisions offline
+- IoT gateways that manage access to multiple connected devices
 
-drawing: https://docs.google.com/drawings/d/19gKj3q9ITIahSrRXr3Ul76ntMTrowK3g0XbVQ4jOquo/edit?usp=sharing
+Key features: Lightweight persistence layer optimized for embedded systems; offline caching with synchronization mechanisms.
 
-* Resource Types: Anything managed by the service being protected
-* Resources: a particular instance of a resource type
-* Action: Something the service being protected can do with resources (Read,
-  Write, List, etc.)
-* Permissions: The general right to take an action on resource of a type under
-  Constraints
-* Roles: Classes of actors on protected resources
-* Context: The particular properties of a request to take an action on a
-  resource
-  * For a proxy, this could be the `*http.Request` object
-* Constraint: Arbitrary rule that may deny permission depending on context
-* [Future work] Dependant constraint: Constraint that depends on particular
-  resources that the request applies to
-* Privileges: The assignment of a Permission to a role
-  * [Future work] declarative constraints on Privileges, and Privileges state
-    changes
+### DevOps & Infrastructure Tooling
+
+The shell script constraint runner is unique and particularly valuable for infrastructure-focused tools where:
+
+- Authorization needs to integrate with existing shell scripts and system commands
+- Permissions depend on infrastructure state that's best queried through CLI tools
+- Operators are already comfortable with shell scripting
+
+Key features: Built-in integration with common DevOps tools; template library for infrastructure-specific constraints.
+
+### Multi-Language Microservice Architectures
+
+Your design is conceptually simple and the shell script constraint runner provides language-agnostic extensibility:
+
+- Services written in different languages can share the same authorization model
+- Shell script constraints can be written in any language and called consistently
+- Authorization logic can be centralized while implementation remains distributed
+
+Key features: Standardized constraint interfaces for multiple languages; gRPC/REST services for centralized policy management.
+
+### Legacy System Integration
+
+Many organizations struggle with access control when integrating with legacy systems:
+
+- Shell script constraints could easily wrap existing CLI-based authentication systems
+- The simple model makes it easier to map between modern and legacy paradigms
+- Lightweight implementation means it can be deployed alongside legacy components
+
+Key features: Adapters for common legacy authorization systems; migration tooling.
+
+### Educational & Teaching Environments
+
+TRBAC's clarity makes it excellent for teaching authorization concepts:
+
+- Clean separation between model components
+- Clear implementation that follows the conceptual model
+- Minimal "magic" compared to larger frameworks
+
+Key features: Interactive examples; visualization of authorization decisions; configurable complexity levels.
