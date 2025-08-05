@@ -1,0 +1,42 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.37.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           trbac-haskell
+version:        0.1.0.0
+build-type:     Simple
+
+library
+  exposed-modules:
+      TRBAC.Types
+      TRBAC.Context
+      TRBAC.ConstraintRunner
+      TRBAC.Authorization
+      TRBAC.Config
+  other-modules:
+      Main
+      Paths_trbac_haskell
+  hs-source-dirs:
+      src
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , containers
+    , text
+    , yaml
+  default-language: Haskell2010
+
+test-suite trbac-test
+  type: exitcode-stdio-1.0
+  main-is: TRBACTest.hs
+  other-modules:
+      Paths_trbac_haskell
+  hs-source-dirs:
+      test
+  build-depends:
+      QuickCheck
+    , hspec
+    , trbac-haskell
+  default-language: Haskell2010

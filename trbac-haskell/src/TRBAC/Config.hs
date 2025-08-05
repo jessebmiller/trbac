@@ -17,6 +17,9 @@ instance FromJSON ResourceType where
 instance FromJSON Role where
   parseJSON = withText "Role" $ pure . Role
 
+instance FromJSONKey Role where
+  fromJSONKey = FromJSONKeyText Role
+
 instance FromJSON Constraint where
   parseJSON = withText "Constraint" $ pure . Constraint
 

@@ -1,3 +1,6 @@
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ImpredicativeTypes #-}
+
 module TRBAC.ConstraintRunner where
 
 import qualified Data.Map as Map
@@ -7,8 +10,7 @@ import TRBAC.Context
 -- | Type class for constraint runners
 class ConstraintRunner r where
   -- | Evaluate a constraint in a context
-  runConstraint :: r -> Constraint -> c -> Bool
-    where c :: Context c
+  runConstraint :: Context c => r -> Constraint -> c -> Bool
 
 -- | A constraint runner using a map of functions
 newtype FunctionMapConstraintRunner = FunctionMapConstraintRunner

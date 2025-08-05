@@ -1,0 +1,31 @@
+name: trbac-haskell
+version: 0.1.0.0
+build-type: Simple
+
+library:
+  source-dirs:
+    - src
+  exposed-modules:
+    - TRBAC.Types
+    - TRBAC.Context
+    - TRBAC.ConstraintRunner
+    - TRBAC.Authorization
+    - TRBAC.Config
+  dependencies:
+    - base >=4.7 && <5
+    - containers
+    - text
+    - aeson
+    - yaml
+  language: Haskell2010
+
+tests:
+  trbac-test:
+    main: TRBACTest.hs
+    source-dirs:
+      - test
+    dependencies:
+      - trbac-haskell
+      - hspec
+      - QuickCheck
+    language: Haskell2010

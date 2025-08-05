@@ -1,0 +1,8 @@
+? /home/jesse/work/trbac/trbac-haskell/.stack-work/dist/x86_64-linux-tinfo6/ghc-9.8.4/build/trbac-test/autogen/Paths_trbac_haskell.hs
+: hash: f0c4a7dfb8f6de4550a9e7c58654555a23c455c5b61da2d306729cb4613dab22
+/home/jesse/work/trbac/trbac-haskell/package.yaml:
+  hash: a47a47958ddcc8990a51fc779d02af5f9591a3deffa6c0b2f3e65696d77ce82d
+/home/jesse/work/trbac/trbac-haskell/test/TRBACTest.hs:
+  hash: 57edd3d9bb4fe8f57235c86181eb8478f184360c043d411f69991080bcd17be8
+/home/jesse/work/trbac/trbac-haskell/trbac-haskell.cabal:
+  hash: c56b2690138216bddce433c5c13a39c54a139e3b98f7205a1bf9026ec44f130b

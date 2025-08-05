@@ -1,0 +1,22 @@
+? /home/jesse/.stack/programs/x86_64-linux/ghc-tinfo6-9.8.4/lib/ghc-9.8.4/lib/x86_64-linux-ghc-9.8.4/rts-1.0.2/include/ghcversion.h
+: hash: 95162794a3bf5e6167631fdd41a509846597231d523d0f21a76713b1f801373c
+/home/jesse/work/trbac/trbac-haskell/.stack-work/dist/x86_64-linux-tinfo6/ghc-9.8.4/build/autogen/Paths_trbac_haskell.hs:
+  hash: ecf54f22bd6b0b3dda3e0cd65f9b7156b76687983872153a087cd4b39de5b94f
+/home/jesse/work/trbac/trbac-haskell/package.yaml:
+  hash: a47a47958ddcc8990a51fc779d02af5f9591a3deffa6c0b2f3e65696d77ce82d
+/home/jesse/work/trbac/trbac-haskell/src/Main.hs:
+  hash: e5e2084cb39163479c4ee031839477f8ff7373b30823b9de1ef501eef85607ba
+/home/jesse/work/trbac/trbac-haskell/src/TRBAC/Authorization.hs:
+  hash: 9650f2bfd5c72d71b469080852d10f0bff9636cd827c33a57528a1ec24bf813d
+/home/jesse/work/trbac/trbac-haskell/src/TRBAC/Config.hs:
+  hash: 4edf28817465cdd093fb45054d229303dfa38b617ec2189e8781573b3aebeb19
+/home/jesse/work/trbac/trbac-haskell/src/TRBAC/ConstraintRunner.hs:
+  hash: 1a10ff432f7482a80321c44a31bc11a8f8576c868b1b30a00db63dcd0a76accf
+/home/jesse/work/trbac/trbac-haskell/src/TRBAC/Context.hs:
+  hash: 0eae163586d41cf52a6fee8374801bd863833cb702f1d5ce554547bc801d9b65
+/home/jesse/work/trbac/trbac-haskell/src/TRBAC/Types.hs:
+  hash: 51576a4ae2638cfecd9bc902d8564aa057c956d4bb1b6ef6efe931fce1943e9f
+/home/jesse/work/trbac/trbac-haskell/trbac-haskell.cabal:
+  hash: c56b2690138216bddce433c5c13a39c54a139e3b98f7205a1bf9026ec44f130b
+/usr/include/stdc-predef.h:
+  hash: cb08cd5d4cc059a90833ac48a284d25016e8d56ded8ad4cd98d8ac59cc5053f3
